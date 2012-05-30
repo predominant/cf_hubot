@@ -30,7 +30,7 @@
   },
 
   "scripts": {
-    "test": "make"
+    "test": "find test -name '*_test.coffee' | xargs -n 1 -t coffee"
   }
 }
 
