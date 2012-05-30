@@ -19,6 +19,13 @@ class Campfire extends Adapter
     @bot.Room(user.room).topic strings.join(" / "), (err, data) =>
       @robot.logger.error "Campfire error: #{err}" if err?
 
+  usersInRoom: (room, callback) ->
+    @bot.Room(room).show (err, data) ->
+      if err
+        callback err
+      else
+        callback null, (name for user.name in data.room.users)
+
   run: ->
     self = @
 

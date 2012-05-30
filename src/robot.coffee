@@ -284,6 +284,16 @@ class Robot
   users: ->
     @brain.data.users
 
+  # Public: Get an Array of User objects for users in the specified room.
+  # Extend this.
+  #
+  # room     - A String of the unique identifier for the room.
+  # callback - A Function to receive an Array of Users.
+  #
+  # Returns nothing.
+  usersInRoom: (room, callback) ->
+    @adapter.usersInRoom room, callback
+
   # Public: Get a User object given a unique identifier.
   #
   # Returns a User instance of the specified user.
