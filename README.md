@@ -1,81 +1,78 @@
-# Hubot
+# Hubot Adapted for Cloud Foundry
 
-This is a version of GitHub's Campfire bot, hubot. He's pretty cool.
+This is the version of hubot that works on Cloud Foundry.
 
-**You'll probably never have to hack on this repo directly.**
+## Installation
 
-Instead this repo provides a library that's distributed by `npm` that you
-simply require in your project. Follow the instructions below and get your own
-hubot ready to deploy.
+1\. Clone the code
 
-## Getting your own
-
-Make sure you have [node.js][nodejs] and [npm][npmjs] (npm comes with node v0.6.5+) installed.
-
-Download the [latest version of hubot][hubot-latest].
-
-Then follow the instructions in the [README][readme] in the extracted `hubot`
-directory.
-
-[nodejs]: http://nodejs.org
-[npmjs]: http://npmjs.org
-[hubot-latest]: https://github.com/github/hubot/downloads
-[readme]: https://github.com/github/hubot/blob/master/src/templates/README.md
-
-## Adapters
-
-Adapters are the interface to the service you want your hubot to run on. This
-can be something like Campfire or IRC. There are a number of third party
-adapters that the community have contributed. Check the
-[hubot wiki][hubot-wiki] for the available ones and how to create your own.
-
-Please submit issues and pull requests for third party adapters to the adapter
-repo not this repo unless it's the Campfire or Shell adapter.
-
-[hubot-wiki]: https://github.com/github/hubot/wiki
-[third-party-adapters]: https://github.com/github/hubot/tree/master/src/adapters/third-party
-[split-subpath]: http://help.github.com/split-a-subpath-into-a-new-repo/
-[logjs]: https://github.com/visionmedia/log.js
-
-## hubot-scripts
-
-Hubot ships with a number of default scripts, but there's a growing number of
-extras in the [hubot-scripts][hubot-scripts] repository. `hubot-scripts` is a
-way to share scripts with the entire community.
-
-Check out the [README][hubot-scripts-readme] for more help on installing
-individual scripts.
-
-[hubot-scripts]: https://github.com/github/hubot-scripts
-[hubot-scripts-readme]: https://github.com/github/hubot-scripts#readme
-
-## HTTP Listener
-
-Hubot has a HTTP listener which listens on the port specified by the `PORT`
-environment variable.
-
-You can specify routes to listen on in your scripts by using the `router`
-property on `robot`.
-
-```coffeescript
-module.exports = (robot) ->
-  robot.router.get "/hubot/version", (req, res) ->
-    res.end robot.version
+```bash
+git clone git://github.com/progmary/hubot.git
 ```
 
-There are functions for GET, POST, PUT and DELETE, which all take a route and
-callback function that accepts a request and a response.
+2\. Install dependencies
 
-## Testing hubot locally
+```bash
+cd hubot
+npm install
+```
+3\. Deploy to Cloud Foundry as Node.js application, you can provide redis service if your hubot scripts need it.
 
-Install all of the required dependencies by running `npm install`.
+```bash
+vmc push my-hubot-app-name
+```
 
-It's easy to test scripts locally with an interactive shell:
+4\. Let hubot know its application URL.
 
-    % export PATH="node_modules/.bin:$PATH"
-    % bin/hubot
+```bash
+vmc env-add my-hubot-app-name APP_URL=http://my-hubot-app-name.cloudfoundry.com/
+```
 
-... and to run unit tests:
+## Configuring for Campfire
 
-    % make test
+To make it work with Campfire you need to create a [Campfire](http://campfirenow.com/) account first. This account is going to be hubot's account. Then, you need to add several environment variables.
 
+1\. First, set Hubot adapter as campfire.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_ADAPTER=campfire
+```
+
+2\. Provide Campfire hubot's account API token. It can be found in "My info" page after logging in.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_CAMPFIRE_TOKEN="...."
+```
+
+3\. Provide Campire room IDs. Room ID is a numeric value in URL of the room.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_CAMPFIRE_ROOMS="123,345"
+```
+
+4\. Provide Campfire subdomain. The subdomain is the first domain part of Campfire URL. For example, if your Campfire URL is `hubot.campfirenow.com` your subdomain is `hubot`.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_CAMPFIRE_ACCOUNT="...."
+```
+
+5\. Join Campfire chat as another user and you should see your Hubot account there. Run `hubot help`.
+
+## Configuring for IRC
+
+1\. First, set Hubot adapter as irc.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_ADAPTER=irc
+```
+
+2\. Set IRC host and rooms.
+
+```bash
+vmc env-add my-hubot-app-name HUBOT_IRC_SERVER="...."
+vmc env-add my-hubot-app-name HUBOT_IRC_ROOMS="#room1,#room2"
+```
+
+Other parameters can be found [here](https://github.com/github/hubot/wiki/Adapter:-IRC)
+
+[Original Hubot](https://github.com/github/hubot)

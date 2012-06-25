@@ -8,7 +8,7 @@ HttpClient = require 'scoped-http-client'
 User       = require './user'
 Brain      = require './brain'
 
-HUBOT_DEFAULT_ADAPTERS = [ "campfire", "shell" ]
+HUBOT_DEFAULT_ADAPTERS = [ "campfire", "shell", "irc" ]
 
 class Robot
   # Robots receive messages from a chat source (Campfire, irc, etc), and
@@ -191,14 +191,14 @@ class Robot
           @logger.debug "Registered route: DELETE #{route}"
           app.delete route, callback
 
-    @connect.listen process.env.PORT || 8080
+    @connect.listen process.env.VCAP_APP_PORT || 8080
 
-    herokuUrl = process.env.HEROKU_URL
+    appUrl = process.env.APP_URL
 
-    if herokuUrl
-      herokuUrl += '/' unless /\/$/.test herokuUrl
+    if appUrl
+      appUrl += '/' unless /\/$/.test appUrl
       setInterval =>
-        HttpClient.create("#{herokuUrl}hubot/ping")
+        HttpClient.create("#{appUrl}hubot/ping")
           .post() (err, res, body) =>
             @logger.info "keep alive ping!"
       , 1200000

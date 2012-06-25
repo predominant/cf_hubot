@@ -14,6 +14,10 @@ Path       = require 'path'
 HTTP       = require 'http'
 Creator    = require '../src/creator'
 OptParse   = require 'optparse'
+cf         = require 'cf-runtime'
+
+if (cf.CloudApp.runningInCloud && cf.CloudApp.serviceProps.redis)
+  process.env.REDISTOGO_URL = cf.CloudApp.serviceProps.redis.url
 
 Switches = [
   [ "-a", "--adapter ADAPTER", "The Adapter to use" ],
@@ -27,11 +31,11 @@ Switches = [
 ]
 
 Options =
-  adapter: "shell"
+  adapter: process.env.HUBOT_ADAPTER || "shell"
   alias: false
   create: false
   enableHttpd: true
-  name: "Hubot"
+  name: process.env.HUBOT_NAME || "Hubot"
   path: "."
 
 Parser = new OptParse.OptionParser(Switches)
