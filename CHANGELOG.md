@@ -1,3 +1,49 @@
+v2.3.4
+======
+
+* Add 'examples' and 'urls' to list of known documentation sections
+
+* Improve mustache results - marsam in #341
+
+v2.3.3
+======
+
+* Fix help parsing of javascript iles - ferlores in #322 
+
+* Roles will correctly semicolon-delimit the list of roles if one (or more) roles contain a comma. - futuraprime in #327
+
+* Updated translations of supported languages as of 20120801 - sopel in #328
+
+* Escape brackets in html view of help - tombell, technicalpickles
+
+* More coffee-like translate.coffee - elmoeleven in #336
+
+* Fixed reference to when npm was included w/ node - technicalpickles in #347
+
+* Backwards-compatible help parsing, and tracking all documentation instead of just commands - technicalpickles
+
+v2.3.2
+======
+* New route `/hubot/help` to display command help - tombell
+
+* Role script fix - ferlores
+
+* Store connect server - tombell
+
+v2.3.0
+======
+* Extracted remaining classes into their own files - tombell
+
+**Note** this is a breaking change for adapters. Adapters are going to want to
+use the following code snippet for requiring classes from hubot.
+
+    {Adapter,Robot} = require 'hubot'
+
+* Update the formatting of documentation comments at the top of
+  scripts - technicalpickles
+
+* Update the parsing of the documentation comments - tombell
+
 v2.2.0
 ======
 * Fixed keep alive ping, requires `HEROKU_URL` - tombell and jimeh

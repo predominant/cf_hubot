@@ -1,11 +1,11 @@
-Robot        = require '../robot'
-Adapter      = require '../adapter'
+HTTPS          = require 'https'
+{EventEmitter} = require 'events'
 
-HTTPS        = require 'https'
-EventEmitter = require('events').EventEmitter
+Robot                                   = require '../robot'
+Adapter                                 = require '../adapter'
+{TextMessage,EnterMessage,LeaveMessage} = require '../message'
 
 class Campfire extends Adapter
-
   send: (user, strings...) ->
     if strings.length > 0
       @bot.Room(user.room).speak strings.shift(), (err, data) =>
@@ -40,15 +40,15 @@ class Campfire extends Adapter
 
     bot.on "TextMessage", withAuthor (id, created, room, user, body, author) ->
       unless bot.info.id == author.id
-        self.receive new Robot.TextMessage(author, body)
+        self.receive new TextMessage(author, body)
 
     bot.on "EnterMessage", withAuthor (id, created, room, user, body, author) ->
       unless bot.info.id == author.id
-        self.receive new Robot.EnterMessage(author)
+        self.receive new EnterMessage(author)
 
     bot.on "LeaveMessage", withAuthor (id, created, room, user, body, author) ->
       unless bot.info.id == author.id
-        self.receive new Robot.LeaveMessage(author)
+        self.receive new LeaveMessage(author)
 
     bot.Me (err, data) ->
       bot.info = data.user
@@ -79,7 +79,7 @@ class CampfireStreaming extends EventEmitter
     @token         = options.token
     @rooms         = options.rooms.split(",")
     @account       = options.account
-    @domain        = @account + ".campfirenow.com"
+    @host          = @account + ".campfirenow.com"
     @authorization = "Basic " + new Buffer("#{@token}:x").toString("base64")
 
   Rooms: (callback) ->
@@ -201,12 +201,12 @@ class CampfireStreaming extends EventEmitter
 
     headers =
       "Authorization" : @authorization
-      "Host"          : @domain
+      "Host"          : @host
       "Content-Type"  : "application/json"
 
     options =
       "agent"  : false
-      "host"   : @domain
+      "host"   : @host
       "port"   : 443
       "path"   : path
       "method" : method

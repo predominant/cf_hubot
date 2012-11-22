@@ -10,6 +10,8 @@ This is the version of hubot that works on Cloud Foundry.
 git clone git://github.com/progmary/hubot.git
 ```
 
+Make sure you have [node.js][nodejs] and [npm][npmjs] (npm comes with node v0.6.3+) installed.
+
 2\. Install dependencies
 
 ```bash
